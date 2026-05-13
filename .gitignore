@@ -1,0 +1,51 @@
+# Jupyter
+
+.ipynb_checkpoints/
+
+# Python
+
+__pycache__/
+
+*.py[cod]
+
+# Environments
+
+.env
+
+.venv/
+
+venv/
+
+env/
+
+# Logs
+
+*.log
+
+logs/
+
+# Outputs / models / large files
+
+outputs/
+
+results/
+
+runs/
+
+models/
+
+checkpoints/
+
+*.pt
+
+*.pth
+
+*.ckpt
+
+*.h5
+
+*.onnx
+
+# System files
+
+.DS_Store
