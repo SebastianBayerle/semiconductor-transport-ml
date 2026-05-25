@@ -20,7 +20,8 @@ SRC_ROOT = PROJECT_ROOT / "src"
 sys.path.append(str(PROJECT_ROOT))
 sys.path.append(str(SRC_ROOT))
 
-PROJECT_ROOT = Path.cwd() 
+PROJECT_ROOT = Path("/gpfs/data/fs72205/sbayerle/ML/sophisticated_code")
+sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.append(str(PROJECT_ROOT))
 
 from src.data.datamodule import TransportDataModule
