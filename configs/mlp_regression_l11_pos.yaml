@@ -12,13 +12,9 @@ data:
     flatten: true
 
   target:
-    type: curves 
-    # type: params
-   # params: ["t", "alpha", "delta", "gamma", "eposs", "eweight"]
-    #log_params: ["gamma", "eweight"]
-    curves: ["L12","L12B"] 
-    log: true
-    flatten: true
+    type: parameters
+    params: ["t", "alpha", "delta", "gamma", "eposs", "eweight"]
+    log_params: ["gamma", "eweight"]
   filters:
     accdon: 1.0
 

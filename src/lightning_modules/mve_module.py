@@ -88,3 +88,17 @@ class MVEModule(pl.LightningModule):
             lr=self.lr,
             weight_decay=self.weight_decay,
         )
+    def test_step(self, batch, batch_idx):
+        x, y = batch
+    
+        mean, log_var = self(x)
+    
+        test_mse = self.mse_loss(mean, y)
+        test_nll = self.gaussian_nll_loss(mean, log_var, y)
+        pred_std = torch.exp(0.5 * log_var)
+    
+        self.log("test_mse", test_mse, prog_bar=True, on_step=False, on_epoch=True)
+        self.log("test_nll", test_nll, prog_bar=True, on_step=False, on_epoch=True)
+        self.log("test_mean_std", pred_std.mean(), prog_bar=True, on_step=False, on_epoch=True)
+    
+        return test_nll

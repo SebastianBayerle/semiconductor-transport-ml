@@ -55,3 +55,12 @@ class RegressionModule(pl.LightningModule):
             lr=self.lr,
             weight_decay=self.weight_decay,
         )
+    def test_step(self, batch, batch_idx):
+        x, y = batch
+    
+        pred = self(x)
+        loss = self.loss_fn(pred, y)
+    
+        self.log("test_loss", loss, prog_bar=True, on_step=False, on_epoch=True)
+    
+        return loss
