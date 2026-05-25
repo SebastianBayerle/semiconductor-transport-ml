@@ -1,7 +1,8 @@
 # Jupyter
 
 .ipynb_checkpoints/
-
+Test.ipynb
+MVE.ipynb
 # Python
 
 __pycache__/
