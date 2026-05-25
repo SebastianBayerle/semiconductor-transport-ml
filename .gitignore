@@ -23,17 +23,17 @@ env/
 
 *.log
 
-logs/
+/logs/
 
 # Outputs / models / large files
 
-outputs/
+/outputs/
 
-results/
+/results/
 
-runs/
+/runs/
 
-models/
+/models/
 
 checkpoints/
 

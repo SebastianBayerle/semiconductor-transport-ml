@@ -1,0 +1,45 @@
+seed: 42
+
+data:
+  dataset_path: /gpfs/data/fs72205/sbayerle/ML/gather_mega_imp.hdf5 
+  cache_dir: /gpfs/data/fs72205/sbayerle/ML/cache
+  use_cache: true
+
+  input:
+    type: curves
+    curves: ["L11"]
+    log: true
+    flatten: true
+
+  target:
+    type: curves 
+    # type: params
+   # params: ["t", "alpha", "delta", "gamma", "eposs", "eweight"]
+    #log_params: ["gamma", "eweight"]
+    curves: ["L12","L12B"] 
+    log: true
+    flatten: true
+  filters:
+    accdon: 1.0
+
+  normalize_x: false
+  normalize_y: true
+
+  train_fraction: 0.7
+  val_fraction: 0.1
+  test_fraction: 0.2
+
+  batch_size: 512
+  num_workers: 0
+  pin_memory: true
+
+model:
+  type: mlp_regressor
+  hidden_dims: [128, 256, 128]
+  activation: relu
+  dropout: 0.0
+
+training:
+  max_epochs: 500
+  lr: 0.001
+  weight_decay: 0.0
