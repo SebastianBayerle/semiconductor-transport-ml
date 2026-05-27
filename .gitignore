@@ -50,3 +50,7 @@ checkpoints/
 # System files
 
 .DS_Store
+
+#Test Files 
+Untitled.ipynb
+scripts/plot_pred_L12.py
