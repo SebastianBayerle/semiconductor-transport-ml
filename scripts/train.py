@@ -70,7 +70,8 @@ def make_lightning_module(config, model):
         return MVEModule(
             model=model,
             lr=train_cfg.get("lr", 1e-3),
-            weight_decay=train_cfg.get("weight_decay", 0.0),
+            mean_weight_decay=train_cfg.get("mean_weight_decay", 0.0),
+            var_weight_decay = train_cfg.get("var_weight_decay",0.0),
             warmup_epochs=train_cfg.get("warmup_epochs", 100),
         )
 
@@ -160,15 +161,18 @@ def main():
         name="tensorboard",
     )
 
+    monitor = config["training"].get("monitor", "val_loss")
+    monitor_mode = config["training"].get("monitor_mode", "min")
+    checkpoint_filename = f"epoch={{epoch:03d}}-{monitor}={{{monitor}:.6f}}"
     checkpoint_callback = ModelCheckpoint(
         dirpath=run_dir / "checkpoints",
-        filename="epoch={epoch:03d}-val_loss={val_loss:.6f}",
-        monitor=config["training"].get("monitor", "val_loss"),
-        mode=config["training"].get("monitor_mode", "min"),
+        filename=checkpoint_filename,
+        monitor=monitor,
+        mode=monitor_mode,
         save_top_k=config["training"].get("save_top_k", 1),
         save_last=True,
+        auto_insert_metric_name=False,
     )
-
     callbacks = [checkpoint_callback]
 
     if config["training"].get("early_stopping", False):

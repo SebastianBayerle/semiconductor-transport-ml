@@ -18,14 +18,16 @@ class MVEModule(pl.LightningModule):
         self,
         model: nn.Module,
         lr: float = 1e-3,
-        weight_decay: float = 0.0,
+        mean_weight_decay=1e-4,
+        var_weight_decay=1e-3,
         warmup_epochs: int = 100,
     ):
         super().__init__()
 
         self.model = model
         self.lr = lr
-        self.weight_decay = weight_decay
+        self.mean_weight_decay = mean_weight_decay
+        self.var_weight_decay = var_weight_decay
         self.warmup_epochs = warmup_epochs
 
         self.mse_loss = nn.MSELoss()
@@ -79,14 +81,27 @@ class MVEModule(pl.LightningModule):
         self.log("val_mse", val_mse, prog_bar=True, on_step=False, on_epoch=True)
         self.log("val_nll", val_nll, prog_bar=True, on_step=False, on_epoch=True)
         self.log("val_mean_std", pred_std.mean(), prog_bar=True, on_step=False, on_epoch=True)
+        self.log("val_loss", val_nll, prog_bar=False, on_step=False, on_epoch=True)
 
         return val_nll
 
     def configure_optimizers(self):
         return torch.optim.AdamW(
-            self.parameters(),
+            [
+                {
+                    "params": self.model.shared.parameters(),
+                    "weight_decay": self.mean_weight_decay,
+                },
+                {
+                    "params": self.model.mean_head.parameters(),
+                    "weight_decay": self.mean_weight_decay,
+                },
+                {
+                    "params": self.model.log_var_head.parameters(),
+                    "weight_decay": self.var_weight_decay,
+                },
+            ],
             lr=self.lr,
-            weight_decay=self.weight_decay,
         )
     def test_step(self, batch, batch_idx):
         x, y = batch
