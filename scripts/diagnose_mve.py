@@ -14,7 +14,7 @@ sys.path.insert(0, str(REPO_ROOT))
 from src.data.datamodule import TransportDataModule
 from src.models.mlp import MLPMeanVariance
 from src.lightning_modules.mve_module import MVEModule
-from src.evaluation.uncertainty import (
+from src.evaluation.uncertainty_mve_module import (
     PARAM_NAMES,
     predict_mve_normalized,
     uncertainty_by_parameter,
