@@ -72,7 +72,9 @@ def make_lightning_module(config, model):
             lr=train_cfg.get("lr", 1e-3),
             mean_weight_decay=train_cfg.get("mean_weight_decay", 0.0),
             var_weight_decay = train_cfg.get("var_weight_decay",0.0),
-            warmup_epochs=train_cfg.get("warmup_epochs", 100),
+            mean_epochs=train_cfg.get("mean_epochs", 250),
+            variance_epochs=train_cfg.get("variance_epochs", 250),
+            joint_training=train_cfg.get("joint_training", False),
         )
 
     raise ValueError(f"Unknown model type: {model_type}")
