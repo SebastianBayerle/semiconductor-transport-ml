@@ -31,7 +31,7 @@ data:
 
 model:
   type: mlp_regressor
-  hidden_dims: [128, 256, 128]
+  hidden_dims: [128, 128, 128]
   activation: relu
   dropout: 0.0
 
