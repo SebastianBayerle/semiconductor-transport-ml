@@ -34,7 +34,7 @@ env/
 /runs/
 /tuning_runs/
 /models/
-
+configs/mlp_regression_l11_pos_20260604_233003_first_tune_mlp_l11_to_params.yaml
 checkpoints/
 
 *.pt
