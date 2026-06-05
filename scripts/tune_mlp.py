@@ -55,7 +55,7 @@ def suggest_config(trial, base_config):
     # -------------------------
     # Model hyperparameters
     # -------------------------
-    hidden_name = trial.suggest_categorical("hidden_dims",["64,64","128,128","256,256","128,128,128", "128,256,128","256,256,256","256,512,256"],)
+    hidden_name = trial.suggest_categorical("hidden_dims",["64,64","128,128","256,256","128,128,128", "128,256,128","256,256,256","256,512,256","128,128,128,128","128,128,128,128,128"],)
 
     config["model"]["hidden_dims"] = [int(x) for x in hidden_name.split(",")]
 
