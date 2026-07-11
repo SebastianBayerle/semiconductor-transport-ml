@@ -55,41 +55,51 @@ def suggest_config(trial, base_config):
     # -------------------------
     # Model hyperparameters
     # -------------------------
-    hidden_name = trial.suggest_categorical("hidden_dims",["64,64","128,128","256,256","128,128,128", "128,256,128","256,256,256","256,512,256","128,128,128,128","128,128,128,128,128"],)
-
+    hidden_name = trial.suggest_categorical(
+        "hidden_dims",
+        [
+            "512,512,512",
+            "768,768,768",
+            "1024,1024",
+            "1024,1024,1024",
+            "512,1024,512",
+            "512,1024,1024,512",
+            "1024,2048,1024",
+            "2048,2048",
+            "2048,2048,2048",
+        ],
+    )
+    
     config["model"]["hidden_dims"] = [int(x) for x in hidden_name.split(",")]
-
+    
     config["model"]["dropout"] = trial.suggest_float(
         "dropout",
         0.0,
-        0.2,
+        0.15,
     )
-
+    
     config["model"]["activation"] = trial.suggest_categorical(
         "activation",
         ["relu", "gelu"],
     )
-
-    # -------------------------
-    # Training hyperparameters
-    # -------------------------
+    
     config["training"]["lr"] = trial.suggest_float(
         "lr",
-        1e-4,
-        3e-3,
+        3e-5,
+        2e-3,
         log=True,
     )
-
+    
     config["training"]["weight_decay"] = trial.suggest_float(
         "weight_decay",
-        1e-8,
-        1e-3,
+        1e-7,
+        1e-2,
         log=True,
     )
-
+    
     config["data"]["batch_size"] = trial.suggest_categorical(
         "batch_size",
-        [256, 512, 1024],
+        [512, 1024, 2048, 4096],
     )
 
     # Shorter tuning runs first
