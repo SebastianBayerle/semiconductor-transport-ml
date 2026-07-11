@@ -18,7 +18,7 @@ data:
   filters:
     accdon: 1.0
 
-  normalize_x: false
+  normalize_x: true
   normalize_y: true
 
   train_fraction: 0.7

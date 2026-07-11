@@ -1,9 +1,8 @@
 import torch
 
 
-def signed_log10(x, eps=0):
-    """Apply sign(x) * log10(abs(x) + eps)."""
-    return torch.sign(x) * torch.log10(torch.abs(x) + eps)
+def signed_log10(x, eps=1):
+    return torch.sign(x) * torch.log10(1.0 + torch.abs(x) / eps)
 
 
 
