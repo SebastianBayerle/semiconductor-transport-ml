@@ -5,6 +5,30 @@ def signed_log10(x, eps=1):
     return torch.sign(x) * torch.log10(1.0 + torch.abs(x) / eps)
 
 
+def make_temp_mask(tempaxis, temp_min=None, temp_max=None):
+    """
+    Build boolean mask for temperature window.
+
+    tempaxis: torch.Tensor or np.ndarray with shape (n_temp,)
+    """
+    if not torch.is_tensor(tempaxis):
+        tempaxis = torch.tensor(tempaxis)
+
+    mask = torch.ones_like(tempaxis, dtype=torch.bool)
+
+    if temp_min is not None:
+        mask &= tempaxis >= float(temp_min)
+
+    if temp_max is not None:
+        mask &= tempaxis <= float(temp_max)
+
+    if mask.sum() == 0:
+        raise ValueError(
+            f"No temperature points left for temp_min={temp_min}, temp_max={temp_max}. "
+            f"Available range: {tempaxis.min().item()} to {tempaxis.max().item()} K."
+        )
+
+    return mask
 
 def build_curve_tensor(
     dataset,
@@ -13,6 +37,8 @@ def build_curve_tensor(
     flatten=True,
     add_first_derivative=False,
     add_second_derivative=False,
+    temp_min = None,
+    temp_max = None,
 ):
     """
     Build X or Y tensor from selected transport curves.
@@ -23,7 +49,20 @@ def build_curve_tensor(
         flatten=True:  shape (N, features)
         flatten=False: shape (N, channels, length)
     """
-    curves = dataset.get_curves().clone()  # (N, 4, 100)
+    curves = dataset.get_curves().clone()
+
+    
+    if temp_min is not None or temp_max is not None:
+        tempaxis = dataset.get_tempaxis()
+        temp_mask = make_temp_mask(tempaxis, temp_min=temp_min, temp_max=temp_max)
+    
+        print(
+            f"Applying temperature mask: "
+            f"{tempaxis[temp_mask][0]:.3f} K to {tempaxis[temp_mask][-1]:.3f} K "
+            f"({temp_mask.sum().item()} / {len(tempaxis)} points)"
+        )
+
+        curves = curves[:, :, temp_mask]
 
     curve_idx = [dataset.curve_names.index(name) for name in curve_names]
     X = curves[:, curve_idx, :]            # (N, C, 100)
@@ -136,6 +175,8 @@ def build_tensor_from_spec(dataset, spec):
             flatten=spec.get("flatten", True),
             add_first_derivative=spec.get("add_first_derivative", False),
             add_second_derivative=spec.get("add_second_derivative", False),
+            temp_min = spec.get("temp_min", None),
+            temp_max = spec.get("temp_max", None)
         )
 
     if spec_type == "parameters":
