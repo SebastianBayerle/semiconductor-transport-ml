@@ -182,6 +182,7 @@ class TransportDataModule(L.LightningDataModule):
         self.n_train = len(self.train_set)
         self.n_val = len(self.val_set)
         self.n_test = len(self.test_set)
+        self.tempaxis = raw_dataset.get_tempaxis()
 
     def train_dataloader(self):
         return DataLoader(
@@ -209,3 +210,5 @@ class TransportDataModule(L.LightningDataModule):
             num_workers=self.config.get("num_workers", 0),
             pin_memory=self.config.get("pin_memory", False),
         )
+    def get_tempaxis(self):
+        return self.tempaxis
